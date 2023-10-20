@@ -1,0 +1,86 @@
+/* Base styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.game-container {
+    display: flex;
+    align-items: center;
+}
+
+.game-board {
+    width: 500px;
+    height: 500px;
+    margin-left: 20px;
+    border: 2px solid #e0e0e0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 24px, #e0e0e0 25px),
+                      repeating-linear-gradient(90deg, transparent, transparent 24px, #e0e0e0 25px);
+}
+
+h1 {
+    /* Spacing below the title */
+    margin: 0 0 20px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.menu-container {
+    background-color: #e0e0e0; /* Light grey background for the menu */
+    padding: 15px;
+    margin-bottom: 20px; /* Space below the menu */
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Space between each player info */
+}
+
+#player1-info, #player2-info {
+    width: 100%; 
+}
+
+.score {
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.powerup {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    background-color: #d0d0d0; /* Placeholder color; we'll update for each power-up type */
+}
+
+.controls {
+    display: flex;
+    flex-direction: column; 
+}
+
+.controls > button {
+    margin-bottom: 10px; /* Space between each button */
+}
+
+button {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+button:active {
+    background-color: #111;
+}
