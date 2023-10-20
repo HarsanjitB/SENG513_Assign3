@@ -1,3 +1,9 @@
+// Course: SENG 513
+// Date: October 20, 2023
+// Assignment 2
+// Name: Harsanjit Bhullar
+// UCID: 30006252
+
 // Initialization Functions
 function initializeGame() {
     // Sets up the game, called when the game starts.
