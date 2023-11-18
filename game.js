@@ -14,6 +14,8 @@ let gameStarted = false;
 let canUpdatePlayer1Direction = true;
 let canUpdatePlayer2Direction = true;
 let soundEffectsEnabled = true;
+// Add Black Block (Specialty)
+let blackBlocks = [];
 
 // Initialization Functions
 function initializeGame() {
@@ -21,6 +23,7 @@ function initializeGame() {
     placeSnakes();
     displayInitialUI();
     generateFood();
+    generateBlackBlock();
     waitForStart();
 }
 
@@ -63,7 +66,6 @@ function placeSnakes() {
 
 // Hide associated buttons and start the game
 function startGame() {
-
     console.log('started');
     if (!gameStarted) {
         gameStarted = true;
@@ -88,6 +90,7 @@ function resetGame() {
 
     clearGameGrid();
     initializeGame();
+    generateBlackBlock();
 
     updateScore('player1', 0, true); // Reset scores for both players
     updateScore('player2', 0, true);
@@ -106,6 +109,10 @@ function gameLoop() {
         moveSnake(player2Snake, player2Direction, 'player2');
         checkForCollisions();
         checkForFood();
+    }
+    // Generate a new black block periodically
+    if (Math.random() < 0.02) { // 2% chance per game loop iteration
+        generateBlackBlock();
     }
     // Reset the update flags
     canUpdatePlayer1Direction = true;
@@ -150,6 +157,7 @@ function clearGameGrid() {
         // Clear the class of each cell in the grid.
         cell.className = 'grid-cell';
     });
+    blackBlocks = []; // Clear black blocks
 }
 
 // Player Movement Functions (Removed separate functions for each player)
@@ -190,25 +198,59 @@ function moveSnake(snake, direction, player) {
 }
 
 // Collision Detection
-function checkCollision(snake) {
-    // The first segment of the snake is its head.
+function checkCollision(snake, playerIdentifier) {
     let head = snake[0];
 
-    // Go through each segment of the snake, starting from the second segment.
-    for (let i = 1; i < snake.length; i++) {
-        // Get the current segment we're checking.
-        let segment = snake[i];
+    // Check collision with black blocks (Modified using ChatGPT)
+    for (let i = 0; i < blackBlocks.length; i++) {
+        let block = blackBlocks[i];
+        if (block.x === head.x && block.y === head.y) {
+            // Deduct 1 point and remove the black block
+            updateScore(playerIdentifier, -1);
+            blackBlocks.splice(i, 1); // Remove the block from the array
+            let blockCell = document.getElementById(`cell-${block.x}-${block.y}`);
+            if (blockCell) {
+                blockCell.classList.remove('black-block');
+            }
 
-        // Check if the head's position is the same as this segment's position.
-        if (segment.x === head.x && segment.y === head.y) {
-            // If they are the same, it means the head has collided with this segment.
-            // This indicates a collision, so return true.
-            return true;
+            // Check if score is negative and end game if it is
+            let playerScore = parseInt(document.querySelector(`#${playerIdentifier}-info .score span`).textContent);
+            if (playerScore < 0) {
+                endGame(playerIdentifier === 'player1' ? 'Player 2' : 'Player 1');
+                return true; // Collision occurred, ending game
+            }
+            return false; // Collision occurred, but game continues
         }
     }
 
-    // If we checked all segments and found no collision, return false.
-    return false;
+    // Check collision with itself
+    for (let i = 1; i < snake.length; i++) {
+        let segment = snake[i];
+        if (segment.x === head.x && segment.y === head.y) {
+            return true; // Collision with self, end game
+        }
+    }
+
+    return false; // No collision detected
+}
+
+// Check if a snake has collided with itself
+function checkForCollisions() {
+    // Check collisions for each player with the player identifier
+    var hasPlayer1Collided = checkCollision(player1Snake, 'player1');
+    
+    // Check if player 2's snake has collided with itself
+    var hasPlayer2Collided = checkCollision(player2Snake, 'player2');
+    
+    // If either of the players has collided, end the game
+    if (hasPlayer1Collided || hasPlayer2Collided) {
+        // Determine the winner. If player 1 collided, player 2 wins and vice versa
+        if (hasPlayer1Collided) {
+            endGame('Player 2');
+        } else {
+            endGame('Player 1');
+        }
+    }
 }
 
 // Checks to see if the corresponding snake is in the cell.
@@ -234,25 +276,6 @@ function isCellOccupied(x, y, excludingSnake) {
     }
 
     return false; // The cell is not occupied by any segment of the snake
-}
-
-// Check if a snake has collided with itself
-function checkForCollisions() {
-    // Check if player 1's snake has collided with itself
-    var hasPlayer1Collided = checkCollision(player1Snake);
-    
-    // Check if player 2's snake has collided with itself
-    var hasPlayer2Collided = checkCollision(player2Snake);
-    
-    // If either of the players has collided, end the game
-    if (hasPlayer1Collided || hasPlayer2Collided) {
-        // Determine the winner. If player 1 collided, player 2 wins and vice versa
-        if (hasPlayer1Collided) {
-            endGame('Player 2');
-        } else {
-            endGame('Player 1');
-        }
-    }
 }
 
 // Eating and Power-ups
@@ -284,6 +307,21 @@ function eatFood(snake, player) {
 
         // Increase the player's score by 1
         updateScore(player, 1);
+    }
+}
+
+// Function generated with help of ChatGPT
+function generateBlackBlock() {
+    let x, y;
+    do {
+        x = Math.floor(Math.random() * 20);
+        y = Math.floor(Math.random() * 20);
+    } while (isCellOccupied(x, y, null) || blackBlocks.some(block => block.x === x && block.y === y));
+
+    blackBlocks.push({ x, y });
+    let cell = document.getElementById(`cell-${x}-${y}`);
+    if (cell) {
+        cell.classList.add('black-block');
     }
 }
 
@@ -373,6 +411,14 @@ function pauseGame() {
 
 // When the game ends, play sound effect. 
 function endGame(winner) {
+    // Account for negative scores
+    let player1Score = parseInt(document.querySelector('#player1-info .score span').textContent);
+    let player2Score = parseInt(document.querySelector('#player2-info .score span').textContent);
+
+    if (player1Score < 0 || player2Score < 0) {
+        winner = player1Score < 0 ? 'Player 2' : 'Player 1';
+    }
+
     playSound('snakeHit');
     // Stop the current gameloop (setInterval would execute at the )
     clearInterval(gameInterval);

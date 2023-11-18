@@ -177,3 +177,8 @@ button:hover {
     font-size: 18px;
     cursor: pointer;
 }
+
+/* Added Black Block */
+.black-block {
+    background-color: black;
+}
