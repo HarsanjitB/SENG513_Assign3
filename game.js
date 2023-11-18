@@ -1,6 +1,6 @@
 // Course: SENG 513
-// Date: October 20, 2023
-// Assignment 2
+// Date: November 17, 2023
+// Assignment 3
 // Name: Harsanjit Bhullar
 // UCID: 30006252
 
@@ -400,15 +400,6 @@ function endGame(winner) {
     }, 500); // 500 milliseconds delay
 }
 
-// UI and Sound Updates
-function toggleMusic() {
-    // Toggles the game music on/off.
-}
-
-function toggleSoundEffects() {
-    // Toggles the game sound effects on/off.
-}
-
 function displayPowerUpIcon(player, powerUpType) {
     // Displays the current power-up icon next to the player's score.
 }
@@ -439,13 +430,6 @@ function generatePowerUp() {
     // 1. Randomly select a position on the game grid.
     // 2. Ensure the selected position is not occupied by any snake.
     // 3. Place the food item on the selected position.
-}
-
-function isValidMove(direction, player) {
-    // Checks if the new direction is a valid move.
-    // 1. 1. Check if the new direction is opposite to the current direction (e.g., can't go from "up" to "down" immediately).
-    // 2. If yes, return false.
-    // 3. Else, return true.
 }
 
 // Added a missing function to handle input keys (handling directions) of snakes
@@ -523,6 +507,11 @@ function playSound(soundId) {
         const sound = document.getElementById(soundId);
         sound.play();
     }
+}
+
+// Need to add function for sound effects button (disable sound)
+function toggleSoundEffects() {
+    // Toggles the game sound effects on/off.
 }
 
 // 
