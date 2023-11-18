@@ -15,20 +15,6 @@ let canUpdatePlayer1Direction = true;
 let canUpdatePlayer2Direction = true;
 let soundEffectsEnabled = true;
 
-// Intro Screen: Event Listener will run once the elements are all loaded
-document.addEventListener('DOMContentLoaded', (event) => {
-    const playGameButton = document.querySelector('.play-game-button');
-    const introScreen = document.querySelector('.intro-screen');
-    const gameContainer = document.querySelector('.game-container');
-
-    playGameButton.addEventListener('click', function() {
-        document.getElementById('backgroundMusic').play(); // Play background music
-        introScreen.style.display = 'none'; // Hide introduction screen
-        gameContainer.style.display = 'flex'; // Show the game
-        initializeGame(); // Start the game
-    });
-});
-
 // Initialization Functions
 function initializeGame() {
     setupGameGrid();
@@ -77,21 +63,19 @@ function placeSnakes() {
 
 // Hide associated buttons and start the game
 function startGame() {
-    // Hide Start button
-    document.querySelector('.start-button').style.display = 'none';
-    document.querySelector('.toggle-sound-button').style.display = 'none';
-    document.querySelector('.toggle-effects-button').style.display = 'none';
 
-    // Show Pause and Reset buttons
-    document.querySelector('.pause-button').style.display = 'block';
-    document.querySelector('.reset-button').style.display = 'block';
-    
+    console.log('started');
+    if (!gameStarted) {
+        gameStarted = true;
+        gameInterval = setInterval(gameLoop, 150);
+        // UI updates
+        document.querySelector('.start-button').style.display = 'none';
+        document.querySelector('.toggle-sound-button').style.display = 'none';
+        document.querySelector('.toggle-effects-button').style.display = 'none';
 
-    clearInterval(gameInterval); // Clear any existing intervals
-    resetGame(); // Reset scores at the start
-    gameStarted = false; // Reset the gameStarted flag
-    player1Direction = null; // Ensure directions are null at start
-    player2Direction = null;
+        document.querySelector('.pause-button').style.display = 'block';
+        document.querySelector('.reset-button').style.display = 'block';
+    }
 }
 
 // Moved initial decision to clear game grid to separate function. 
@@ -509,37 +493,50 @@ function playSound(soundId) {
     }
 }
 
-// Need to add function for sound effects button (disable sound)
-function toggleSoundEffects() {
-    // Toggles the game sound effects on/off.
+ // Toggles the game sound effects on/off.
+function soundEffectsOff() {
+    const soundEffectsButton = document.querySelector('.toggle-effects-button');
+    if (soundEffectsEnabled) {
+        soundEffectsEnabled = false;
+        soundEffectsButton.textContent = 'Enable Sound Effects';
+    }else{
+        soundEffectsEnabled = true;
+        soundEffectsButton.textContent = 'Disable Sound Effects';
+    }
 }
 
-// 
+function gameStartButton() {
+    const introScreen = document.querySelector('.intro-screen');
+    const gameContainer = document.querySelector('.game-container');
+    //initializeGame(); // Start the game
+    const player1Name = document.getElementById('player1NameInput').value.trim() || 'Player 1';
+    const player2Name = document.getElementById('player2NameInput').value.trim() || 'Player 2';
+
+    // Update the player info display with names
+    document.getElementById('player1Name').textContent = player1Name;
+    document.getElementById('player2Name').textContent = player2Name;
+
+    introScreen.style.display = 'none'; // Hide introduction screen
+    gameContainer.style.display = 'flex'; // Show the game
+
+    initializeGame(); // Start the game
+    document.getElementById('backgroundMusic').play(); // Play background music
+}
+
 document.addEventListener('keydown', (event) => {
-    if (!gameStarted) {
-        gameInterval = setInterval(gameLoop, 150);
-        gameStarted = true;
-        // Hide Start button
-        document.querySelector('.start-button').style.display = 'none';
-        document.querySelector('.toggle-sound-button').style.display = 'none';
-        document.querySelector('.toggle-effects-button').style.display = 'none';
-
-        // Show Pause and Reset buttons
-        document.querySelector('.pause-button').style.display = 'block';
-        document.querySelector('.reset-button').style.display = 'block';
-    }
-
-    console.log("Key Pressed:", event.key);
-    // Update directions based on key press
-    updateDirection(event.key);
-
-    // Other keys remain the same
+    if(gameStarted){
+        console.log("Key Pressed:", event.key);
+        // Update directions based on key press
+        updateDirection(event.key);
+    };
 });
 
 // Check for actions based on each button (controls)
+document.querySelector('.play-game-button').addEventListener('click', gameStartButton)
 document.querySelector('.pause-button').addEventListener('click', pauseGame);
 document.querySelector('.reset-button').addEventListener('click', resetGame);
 document.querySelector('.toggle-sound-button').addEventListener('click', soundOff);
+document.querySelector('.toggle-effects-button').addEventListener('click', soundEffectsOff);
 document.querySelectorAll('.controls button').forEach(button => {
     button.addEventListener('mouseenter', () => {
         playSound('buttonHoverSound');

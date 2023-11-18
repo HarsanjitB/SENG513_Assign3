@@ -1,6 +1,6 @@
 /* Course: SENG 513 /
-/ Date: October 20, 2023 /
-/ Assignment 2 /
+/ Date: November 17, 2023 /
+/ Assignment 3 /
 / Name: Harsanjit Bhullar /
 / UCID: 30006252 */
 
@@ -16,77 +16,164 @@ body {
 }
 
 .game-container {
-    display: flex;
+    display: none;
+    flex-direction: column;
     align-items: center;
 }
 
-.game-board {
-    width: 500px;
-    height: 500px;
-    margin-left: 20px;
-    border: 2px solid #e0e0e0;
-    background-image: repeating-linear-gradient(0deg, transparent, transparent 24px, #e0e0e0 25px),
-                      repeating-linear-gradient(90deg, transparent, transparent 24px, #e0e0e0 25px);
-}
-
 h1 {
-    /* Spacing below the title */
-    margin: 0 0 20px;
+    margin-bottom: 20px;
     text-align: center;
     font-size: 24px;
 }
 
-.menu-container {
-    background-color: #e0e0e0; /* Light grey background for the menu */
-    padding: 15px;
-    margin-bottom: 20px; /* Space below the menu */
+/* Game Board */
+.game-board {
+    width: 500px;
+    height: 500px;
+    display: grid;
+    grid-template-columns: repeat(20, 0.5fr);
+    grid-template-rows: repeat(20, 0.5fr);
+    gap: 0.8px;
+    background-color: rgb(167, 167, 167);
 }
 
+.grid-cell {
+    background-color: white;
+}
+
+/* Player Info */
 .player-info {
     display: flex;
-    align-items: center;
-    margin-bottom: 20px; /* Space between each player info */
-}
-
-#player1-info, #player2-info {
-    width: 100%; 
+    justify-content: space-between;
+    width: 500px;
+    margin-bottom: 10px;
 }
 
 .score {
     font-size: 20px;
-    margin-left: 10px;
 }
 
-.powerup {
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
-    background-color: #d0d0d0; /* Placeholder color; we'll update for each power-up type */
-}
-
+/* Controls */
 .controls {
     display: flex;
-    flex-direction: column; 
-}
-
-.controls > button {
-    margin-bottom: 10px; /* Space between each button */
+    justify-content: space-between;
+    width: 500px;
+    margin-top: 10px;
 }
 
 button {
-    padding: 5px 15px;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     background-color: #333;
-    color: #ffffff;
+    color: #fff;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 button:hover {
-    background-color: #555;
+    background-color: rgb(175, 175, 175);
 }
 
-button:active {
-    background-color: #111;
+/* Snake Styling */
+.player1 {
+    background-color: blue;
+}
+
+.player2 {
+    background-color: red;
+}
+
+/* Style snake head differently */
+.player1-head {
+    background-color: lightblue; /* Or any other color you prefer */
+}
+
+.player2-head {
+    background-color: pink; /* Or any other color you prefer */
+}
+
+/* Adding Eyes to snakes :D - Used CHATGPT to fix box issues when snake moves*/
+/* Snake Head Styling */
+.player1-head, .player2-head {
+    position: relative; /* Necessary for absolute positioning of pseudo-elements */
+}
+
+/* Eyes for Player 1 Snake */
+.player1-head::before, .player1-head::after {
+    content: '';
+    position: absolute;
+    width: 5px; /* Eye size */
+    height: 5px; /* Eye size */
+    background-color: black; /* Eye color */
+    border-radius: 50%; /* Makes it round */
+}
+
+/* Positioning Eyes for Player 1 Snake */
+.player1-head::before {
+    left: 25%; /* Position of the first eye */
+    top: 25%;
+}
+
+.player1-head::after {
+    right: 25%; /* Position of the second eye */
+    top: 25%;
+}
+
+/* Eyes for Player 2 Snake */
+.player2-head::before, .player2-head::after {
+    content: '';
+    position: absolute;
+    width: 5px; /* Eye size */
+    height: 5px; /* Eye size */
+    background-color: black; /* Eye color */
+    border-radius: 50%; /* Makes it round */
+}
+
+/* Positioning Eyes for Player 2 Snake */
+.player2-head::before {
+    left: 25%; /* Position of the first eye */
+    top: 25%;
+}
+
+.player2-head::after {
+    right: 25%; /* Position of the second eye */
+    top: 25%;
+}
+
+/* Food Styling */
+.food {
+    background-color: green;
+}
+
+/* Intro Screen */
+.intro-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    color: white;
+    z-index: 1000; /* Ensures it's above other elements */
+}
+
+.intro-screen h2 {
+    margin-bottom: 20px;
+}
+
+.intro-screen p {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.play-game-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
 }

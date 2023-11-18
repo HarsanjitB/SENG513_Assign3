@@ -1,6 +1,6 @@
 <!-- Course: SENG 513 -->
-<!-- Date: October 20, 2023 -->
-<!-- Assignment 2 -->
+<!-- Date: November 17, 2023 -->
+<!-- Assignment 3 -->
 <!-- Name: Harsanjit Bhullar -->
 <!-- UCID: 30006252 -->
 <!DOCTYPE html>
@@ -14,33 +14,40 @@
 </head>
 
 <body>
+    <div class="intro-screen">
+        <h2>Welcome to Powered Snakes - Multiplayer</h2>
+        <p>Instructions: Use W, A, S, D keys for Player 1 and Arrow keys for Player 2 to control the snakes. Try to eat as much food as possible without colliding with the walls or the other snake.</p>
+        <label>
+            Player 1 Name: <input type="text" id="player1NameInput" placeholder="Enter Player 1 Name">
+        </label>
+        <label>
+            Player 2 Name: <input type="text" id="player2NameInput" placeholder="Enter Player 2 Name">
+        </label>
+        <button class="play-game-button">Play Game</button>
+    </div>
     <div class="game-container">
         <div class="info-controls-container">
             <h1>Powered Snakes - Multiplayer</h1>
             <div class="menu-container">
                 <!-- Player Info -->
                 <div class="player-info" id="player1-info">
-                    <label>
-                        <input type="text" placeholder="Player 1 Name">
-                    </label>
+                    <span id="player1Name">Player 1</span> - 
                     <div class="score">Score: <span>0</span></div>
                     <div class="powerup"></div>
                 </div>
                 <div class="player-info" id="player2-info">
-                    <label>
-                        <input type="text" placeholder="Player 2 Name">
-                    </label>
+                    <span id="player2Name">Player 2</span> - 
                     <div class="score">Score: <span>0</span></div>
                     <div class="powerup"></div>
                 </div>
-
                 <!-- Game Controls -->
                 <div class="controls">
-                    <button>Start</button>
-                    <button>Pause</button>
-                    <button>Reset</button>
-                    <button>Toggle Sound</button>
-                    <button>Toggle Music</button>
+                    <button class="start-button">Start</button>
+                    <button class="pause-button">Pause</button>
+                    <button class="reset-button">Reset</button>
+                    <!-- Optional: Toggle Sound and Music Buttons -->
+                    <button class="toggle-sound-button">Disable Music</button>
+                    <button class="toggle-effects-button">Disable Sound Effects</button>
                 </div>
             </div>
         </div>
@@ -48,6 +55,16 @@
         <!-- Game Board -->
         <div class="game-board"></div>
     </div>
+
+<!-- Audio for Snakes - Loop for audio tag: https://www.w3schools.com/tags/att_audio_loop.asp  -->
+<audio id="backgroundMusic" loop> 
+    <source src="background.mp3" type="audio/mpeg">
+</audio>
+<audio id="buttonHoverSound" src="hover.mp3"></audio>
+<audio id="eatFoodSound" src="eatFood.mp3"></audio>
+<audio id="gameEndSound" src="over.mp3"></audio>
+<audio id="snakeHit" src="punch.mp3"></audio>
+
 <script src="game.js"></script>
 </body>
 
