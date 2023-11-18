@@ -1,11 +1,11 @@
-# SENG513 - Assignment 2
+# SENG513 - Assignment 3
 
 ## Harsanjit Bhullar
 
 - **Github Username:** HarsanjitB
 - **UCID:** 30006252
 - [Link to repository - Github](https://github.com/HarsanjitB/SENG513_Assign2)
-- **Repo:** SENG513_Assign2
+- **Repo:** SENG513_Assign3
 ## Snakes - Multiplayer
 ***Title:*** Snakes - Multiplayer \
 ***Target Platform:*** The following game is developed for desktop only. \
