@@ -16,6 +16,10 @@ let canUpdatePlayer2Direction = true;
 let soundEffectsEnabled = true;
 // Add Black Block (Specialty)
 let blackBlocks = [];
+// Add Single Powered Block (Purple)
+let purpleBlock = null;
+// Add game over flag
+let isGameOver = false;
 
 // Initialization Functions
 function initializeGame() {
@@ -82,6 +86,7 @@ function startGame() {
 
 // Moved initial decision to clear game grid to separate function. 
 function resetGame() {
+    isGameOver = false;
     // Stop the current gameloop (setInterval would execute at the )
     clearInterval(gameInterval);
     gameStarted = false; // Reset the gameStarted flag
@@ -91,6 +96,7 @@ function resetGame() {
     clearGameGrid();
     initializeGame();
     generateBlackBlock();
+    generatePurpleBlock();
 
     updateScore('player1', 0, true); // Reset scores for both players
     updateScore('player2', 0, true);
@@ -111,8 +117,12 @@ function gameLoop() {
         checkForFood();
     }
     // Generate a new black block periodically
-    if (Math.random() < 0.02) { // 2% chance per game loop iteration
+    if (Math.random() < 0.05) { // 5% chance per game loop iteration
         generateBlackBlock();
+    }
+    // Generate specialty purple block 
+    if (!purpleBlock && Math.random() < 0.02) { // 2% chance
+        generatePurpleBlock();
     }
     // Reset the update flags
     canUpdatePlayer1Direction = true;
@@ -125,14 +135,35 @@ help fix this issue and define the proper way to complete this function.*/
 
 // This function checks if either snake has collided with food
 function checkForFood() {
+    // Find the food cell in the game
+    var foodCell = document.querySelector('.food');
+
+    // If there's no food on the board, exit the function early
+    if (!foodCell) {
+        return;
+    }
+
     // Check if player 1's snake has collided with food
-    checkFoodCollision(player1Snake, 'player1');
+    checkFoodCollision(player1Snake, 'player1', foodCell);
     // Check if player 2's snake has collided with food
-    checkFoodCollision(player2Snake, 'player2');
+    checkFoodCollision(player2Snake, 'player2', foodCell);
+
+    /* Add purple block check since it can be treated as a food element 
+    Used ChatGPT to fix logical errors with the loop (uncaught null exception)*/
+    if (purpleBlock) {
+        if ((player1Snake[0].x === purpleBlock.x && player1Snake[0].y === purpleBlock.y) || (player2Snake[0].x === purpleBlock.x && player2Snake[0].y === purpleBlock.y)) {
+        clearBlackBlocks();
+        let purpleBlockCell = document.getElementById(`cell-${purpleBlock.x}-${purpleBlock.y}`);
+        if (purpleBlockCell) {
+            purpleBlockCell.classList.remove('purple-block');
+        }
+        purpleBlock = null; // Remove the purple block after it's eaten
+    }
+}
 }
 
 // This function checks if a specific snake has collided with food
-function checkFoodCollision(snake, player) {
+function checkFoodCollision(snake, player, foodCell) {
     // Get the first segment of the snake, which is its head
     var head = snake[0];
     // Find the food cell in the game
@@ -325,15 +356,33 @@ function generateBlackBlock() {
     }
 }
 
-function activatePowerUp() {
-    // Activates the power-up for the respective player.
-    // 1. Check the type of power-up.
-    // 2. Activate the effect of the power-up.
-    // 3. Show a timer or indicator for the duration of the power-up.
+/* Generated Purple Block is a special block - Modified to check grid bounds */
+function generatePurpleBlock() {
+    // Check if a purple block already exists on the grid
+    if (!purpleBlock || (purpleBlock && !document.getElementById(`cell-${purpleBlock.x}-${purpleBlock.y}`))) {
+        let x, y, cell;
+        do {
+            x = Math.floor(Math.random() * 20);
+            y = Math.floor(Math.random() * 20);
+            cell = document.getElementById(`cell-${x}-${y}`);
+        } while (!cell || isCellOccupied(x, y, null) || blackBlocks.some(block => block.x === x && block.y === y));
+
+        if (cell) {
+            purpleBlock = { x, y };
+            cell.classList.add('purple-block');
+        }
+    }
 }
 
-function clearGridPowerUp() {
-    // Clears all power-ups/bombs from the grid.
+/* Clear all black blocks on grid when power block is activated - Generated with help from ChatGPT*/
+function clearBlackBlocks() {
+    blackBlocks.forEach(block => {
+        let cell = document.getElementById(`cell-${block.x}-${block.y}`);
+        if (cell) {
+            cell.classList.remove('black-block');
+        }
+    });
+    blackBlocks = [];
 }
 
 function updateSnakeOnGrid(snake, playerClass) {
@@ -414,7 +463,16 @@ function endGame(winner) {
     // Account for negative scores
     let player1Score = parseInt(document.querySelector('#player1-info .score span').textContent);
     let player2Score = parseInt(document.querySelector('#player2-info .score span').textContent);
-
+    // Use game over flag to prevent double alert (fix)
+    if (!isGameOver) {
+        isGameOver = true;
+        // Wait for the sound effect to play before pushing the alert
+        // Avoids issue of playing the sound effect after.
+        setTimeout(function() {
+        alert(`${winner} wins!`);
+        resetGame();
+        }, 500); // 500 milliseconds delay
+    }
     if (player1Score < 0 || player2Score < 0) {
         winner = player1Score < 0 ? 'Player 2' : 'Player 1';
     }
@@ -422,16 +480,6 @@ function endGame(winner) {
     playSound('snakeHit');
     // Stop the current gameloop (setInterval would execute at the )
     clearInterval(gameInterval);
-    // Wait for the sound effect to play before pushing the alert
-    // Avoids issue of playing the sound effect after.
-    setTimeout(function() {
-        alert(`${winner} wins!`);
-        resetGame();
-    }, 500); // 500 milliseconds delay
-}
-
-function displayPowerUpIcon(player, powerUpType) {
-    // Displays the current power-up icon next to the player's score.
 }
 
 // Utility Functions - Code based on freeCodeCamp (https://forum.freecodecamp.org/t/math-floor-and-math-random-function/418969)
@@ -453,13 +501,6 @@ function generateFood() {
         // Add the 'food' class to this cell to display the food
         foodCell.classList.add('food');
     }
-}
-
-function generatePowerUp() {
-    // Randomly generates a power-up on the board.
-    // 1. Randomly select a position on the game grid.
-    // 2. Ensure the selected position is not occupied by any snake.
-    // 3. Place the food item on the selected position.
 }
 
 // Added a missing function to handle input keys (handling directions) of snakes
