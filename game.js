@@ -554,7 +554,7 @@ function soundEffectsOff() {
 function gameStartButton() {
     const introScreen = document.querySelector('.intro-screen');
     const gameContainer = document.querySelector('.game-container');
-    //initializeGame(); // Start the game
+    // Start the game (Modified with ChatGPT)
     const player1Name = document.getElementById('player1NameInput').value.trim() || 'Player 1';
     const player2Name = document.getElementById('player2NameInput').value.trim() || 'Player 2';
 
