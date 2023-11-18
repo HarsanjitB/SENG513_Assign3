@@ -12,9 +12,15 @@
 ***Game Genre:*** Snakes Multiplayer is considered a strategy game. \
 ***Games Objective:*** The objective in Snakes - Multiplayer is to outlive your opponent. This game is designed to be played by two players using the same keyboard. Player One uses keys WASD and Player Two uses the arrow keys to navigate the grid. 
 
-****Rules of the Game:**** Once the game begins, each player will navigate the game board. Food and special items will randomly appear on the game board that each user can navigate to and eat. If a snake eats food, it grows longer. If a snake eats a special item, the player has the ability to use the special item to get an advantage over the other snake. Special items and their descriptions are available in detail on the game page if the user clicks game rules. If a snake's head hits the opponent's snake, it is considered a collision and the snake whose head hit the opponent's snake is killed. Should this happen, the opponent wins. If both snakes collide with their heads, the player with the highest points wins. Points are accumulated based on how much food and how many special abilities the snake consumes.
+****Rules of the Game:**** Once the game begins, each player will navigate the game board. The objective of the game is to survive on the game board longer than your opponent. 
 
-***Game Mechanics:*** Player One would use the WASD keys to navigate and move the board. Player Two would use the arrow keys. To activate the special ability, Player 1 can, at any time, press the "Q" key. Player Two (using the arrow keys) would use the space bar to activate the special ability.
+Green Blocks - Food for your snake. Eating a green block will increase your score by 1. Your snake will also get longer. 
+Black Blocks - Do not run into these blocks. If you hit a black block, you will minus 1 point from your score and the black block will disappear (treat your score as lives against black blocks).
+Purple Block - A single rare block that will clear all black blocks on your grid. 
+
+If you have a score of zero and hit a black block, the game is over and your opponent wins! If you hit your opponent's snake or the grid walls, you automatically lose (regardless of your score).
+
+***Game Mechanics:*** Player One would use the WASD keys to navigate and move the board. Player Two would use the arrow keys. 
 
 ## Copyright Notice
 
